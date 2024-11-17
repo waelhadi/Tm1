@@ -1,17 +1,20 @@
 import base64
 
-def simple_decrypt(data, secret_key):
+def simple_decrypt(data, key):
     """
-    فك التشفير باستخدام XOR مع المفتاح السري.
+    فك التشفير باستخدام XOR مع التحقق من المفتاح.
     """
-    try:
-        # تحويل البيانات المشفرة من Base64 إلى النص الأصلي
-        encrypted = base64.b64decode(data.encode("utf-8")).decode("utf-8")
+    # تحقق من صحة المفتاح
+    correct_key = "my_secret_key"  # المفتاح الصحيح
+    if key != correct_key:
+        raise ValueError("⚠️ المفتاح غير صحيح!")
 
-        # فك التشفير باستخدام XOR
+    # فك التشفير باستخدام XOR
+    try:
+        encrypted = base64.b64decode(data.encode("utf-8")).decode("utf-8")
         decrypted = ''.join(
-            chr(ord(c) ^ ord(k))
-            for c, k in zip(encrypted, secret_key * (len(encrypted) // len(secret_key) + 1))
+            chr(ord(c) ^ 42)  # 42 هو ثابت XOR المستخدم في التشفير
+            for c in encrypted
         )
         return decrypted
     except Exception as e:
